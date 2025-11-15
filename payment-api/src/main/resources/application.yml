@@ -1,0 +1,11 @@
+resilience4j:
+  retry:
+    instances:
+      validatorRetry:
+        max-attempts: 3
+        wait-duration: 500ms
+
+  timelimiter:
+    instances:
+      validatorTimeout:
+        timeout-duration: 2s
