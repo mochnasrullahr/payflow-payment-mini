@@ -6,7 +6,6 @@ plugins {
 
 group = 'com.payflow'
 version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot'
 
 java {
 	toolchain {
@@ -34,8 +33,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-	implementation 'org.springframework.kafka:spring-kafka'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
+    implementation 'org.springframework.kafka:spring-kafka'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -46,6 +46,7 @@ dependencies {
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:kafka'
 	testImplementation 'org.testcontainers:mysql'
+    testImplementation 'org.mockito:mockito-core'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
