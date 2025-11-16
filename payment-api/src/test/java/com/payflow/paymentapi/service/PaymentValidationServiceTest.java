@@ -1,6 +1,6 @@
 package com.payflow.paymentapi.service;
 
-import com.payflow.paymentapi.model.PaymentRequest;
+import com.payflow.paymentapi.dto.PaymentRequest;
 import com.payflow.paymentapi.model.ValidationResult;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package com.payflow.paymentapi.service;
 
-import com.payflow.paymentapi.model.PaymentRequest;
+import com.payflow.paymentapi.dto.PaymentRequest;
 import com.payflow.paymentapi.model.ValidationResult;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
@@ -20,13 +20,13 @@ public class PaymentValidationService {
     public CompletableFuture<ValidationResult> validateAsync(PaymentRequest req) {
 
         return CompletableFuture.supplyAsync(() -> {
-            log.info("Validating payment: {}", req.orderId());
+            log.info("Validating payment: {}", req.getOrderId());
 
-            if (req.amount() == null || req.amount().doubleValue() <= 0) {
+            if (req.getAmount() == null || req.getAmount().doubleValue() <= 0) {
                 return ValidationResult.invalid("Amount must be > 0");
             }
 
-            if (req.currency() == null || req.currency().isBlank()) {
+            if (req.getCurrency() == null || req.getCurrency().isBlank()) {
                 return ValidationResult.invalid("Currency is empty");
             }
 
