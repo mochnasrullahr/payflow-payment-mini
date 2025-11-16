@@ -1,26 +1,29 @@
 package com.payflow.paymentapi.controller;
 
-import com.payflow.paymentapi.model.PaymentRequest;
-import com.payflow.paymentapi.model.ValidationResult;
-import com.payflow.paymentapi.service.PaymentValidationService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import com.payflow.paymentapi.dto.ApiResponse;
+import com.payflow.paymentapi.dto.ChargeRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.CompletableFuture;
-
 @RestController
-@RequestMapping("/payments")
-@RequiredArgsConstructor
+@RequestMapping("/api/payments")
 public class PaymentController {
 
-    private final PaymentValidationService validationService;
+//    @PostMapping("/charge")
+//    public String charge() {
+//        return "Charge processed";
+//    }
 
-    @PostMapping("/validate")
-    public CompletableFuture<ResponseEntity<ValidationResult>> validate(
-            @RequestBody PaymentRequest request
-    ) {
-        return validationService.validateAsync(request)
-                .thenApply(ResponseEntity::ok);
+    @PostMapping("/charge")
+    public ApiResponse<String> charge(@RequestBody ChargeRequest request) {
+        return ApiResponse.<String>builder()
+                .status("SUCCESS")
+                .message("Charge processed")
+                .data("OK-" + request.getReferenceId())
+                .build();
+    }
+
+    @GetMapping("/health")
+    public String health() {
+        return "UP";
     }
 }

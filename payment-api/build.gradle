@@ -61,3 +61,7 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+springBoot {
+    mainClass = "com.payflow.paymentapi.PaymentApiApplication"
+}
