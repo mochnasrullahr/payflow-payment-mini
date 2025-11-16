@@ -14,19 +14,6 @@ public class PaymentController {
 
     @Autowired
     PaymentService paymentService;
-//    @PostMapping("/charge")
-//    public String charge() {
-//        return "Charge processed";
-//    }
-
-    @PostMapping("/charge")
-    public ApiResponse charge(@RequestBody ChargeRequest request) {
-        return ApiResponse.<String>builder()
-                .status("SUCCESS")
-                .message("Charge processed")
-                .data("OK-" + request.getReferenceId())
-                .build();
-    }
 
     @PostMapping("/charge")
     public ApiResponse charge(@RequestBody PaymentRequest req) {
