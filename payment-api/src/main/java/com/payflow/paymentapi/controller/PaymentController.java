@@ -16,10 +16,17 @@ public class PaymentController {
     PaymentService paymentService;
 
     @PostMapping("/charge")
-    public ApiResponse charge(@RequestBody PaymentRequest req) {
-        Payment saved = paymentService.charge(req);
-        return ApiResponse.success("Charge processed", saved);
+    public ApiResponse<Payment> charge(@RequestBody PaymentRequest request) {
+        try {
+            Payment saved = paymentService.process(request);
+            return ApiResponse.success("Charge processed", saved);
+        } catch (IllegalArgumentException ex) {
+            return ApiResponse.error("INVALID_REQUEST", ex.getMessage());
+        } catch (Exception ex) {
+            return ApiResponse.error("PROCESSING_ERROR", ex.getMessage());
+        }
     }
+
 
     @GetMapping("/health")
     public String health() {
