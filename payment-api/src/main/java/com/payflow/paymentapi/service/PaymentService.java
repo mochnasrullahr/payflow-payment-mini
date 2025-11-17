@@ -2,6 +2,7 @@ package com.payflow.paymentapi.service;
 
 import com.payflow.paymentapi.dto.PaymentRequest;
 import com.payflow.paymentapi.entity.Payment;
+import com.payflow.paymentapi.enums.PaymentStatus;
 import com.payflow.paymentapi.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class PaymentService {
                 .amount(req.getAmount())
                 .currency(req.getCurrency())
                 .referenceId(req.getReferenceId())
-                .status("SUCCESS")
+                .status(PaymentStatus.SUCCESS)
                 .build();
 
         Payment saved = paymentRepository.save(payment);

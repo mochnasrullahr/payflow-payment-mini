@@ -1,5 +1,6 @@
 package com.payflow.paymentapi.entity;
 
+import com.payflow.paymentapi.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,5 +22,8 @@ public class Payment {
     private BigDecimal amount;
     private String currency;
     private String referenceId;
-    private String status;    // PENDING, SUCCESS, FAILED
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
+
 }
