@@ -5,7 +5,9 @@ import com.payflow.paymentapi.entity.Payment;
 import com.payflow.paymentapi.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PaymentService {
@@ -19,9 +21,13 @@ public class PaymentService {
      * and throws IllegalArgumentException on invalid input.
      */
     public Payment process(PaymentRequest req) throws Exception {
+        log.info("Start processing payment user={} amount={} ref={}",
+                req.getUserId(), req.getAmount(), req.getReferenceId());
+
         var validationResult = validationService.validateAsync(req).get();
 
-        if (!"VALID".equals(validationResult.status())) {
+        if (!validationResult.status().equals("VALID")) {
+            log.warn("Payment invalid: {}", validationResult.message());
             throw new IllegalArgumentException(validationResult.message());
         }
 
@@ -33,7 +39,10 @@ public class PaymentService {
                 .status("SUCCESS")
                 .build();
 
-        return paymentRepository.save(payment);
+        Payment saved = paymentRepository.save(payment);
+
+        log.info("Payment success id={}", saved.getId());
+        return saved;
     }
 
     /**
