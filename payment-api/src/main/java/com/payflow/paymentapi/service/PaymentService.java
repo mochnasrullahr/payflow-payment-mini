@@ -22,29 +22,40 @@ public class PaymentService {
      * and throws IllegalArgumentException on invalid input.
      */
     public Payment process(PaymentRequest req) throws Exception {
-        log.info("Start processing payment user={} amount={} ref={}",
-                req.getUserId(), req.getAmount(), req.getReferenceId());
 
-        var validationResult = validationService.validateAsync(req).get();
-
-        if (!validationResult.status().equals("VALID")) {
-            log.warn("Payment invalid: {}", validationResult.message());
-            throw new IllegalArgumentException(validationResult.message());
-        }
-
+        // 1. Create payment with PENDING
         Payment payment = Payment.builder()
                 .userId(req.getUserId())
                 .amount(req.getAmount())
                 .currency(req.getCurrency())
                 .referenceId(req.getReferenceId())
-                .status(PaymentStatus.SUCCESS)
+                .status(PaymentStatus.PENDING)
                 .build();
 
-        Payment saved = paymentRepository.save(payment);
+        payment = paymentRepository.save(payment);
 
-        log.info("Payment success id={}", saved.getId());
-        return saved;
+        log.info("Payment {} created with PENDING", payment.getId());
+
+        // 2. VALIDATING
+        var validationResult = validationService.validateAsync(req).get();
+
+        if (!validationResult.status().equals("VALID")) {
+            payment.setStatus(PaymentStatus.FAILED);
+            paymentRepository.save(payment);
+
+            log.warn("Payment {} FAILED: {}", payment.getId(), validationResult.message());
+            throw new IllegalArgumentException(validationResult.message());
+        }
+
+        // 3. SUCCESS
+        payment.setStatus(PaymentStatus.SUCCESS);
+        payment = paymentRepository.save(payment);
+
+        log.info("Payment {} SUCCESS", payment.getId());
+
+        return payment;
     }
+
 
     /**
      * Lightweight helper that skips validation (if you need it).

@@ -11,12 +11,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class PaymentRequest {
 
-    private String orderId;
+    private String userId;
     private BigDecimal amount;
     private String currency;
-
-    private String userId;
     private String referenceId;
+    private String orderId;
+
 
     // ➕ Tambahkan constructor sederhana khusus kebutuhan test
 //    public PaymentRequest(String orderId, BigDecimal amount, String currency) {

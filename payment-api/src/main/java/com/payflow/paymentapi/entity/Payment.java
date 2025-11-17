@@ -24,6 +24,6 @@ public class Payment {
     private String referenceId;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status;
+    private PaymentStatus status = PaymentStatus.PENDING;
 
 }
