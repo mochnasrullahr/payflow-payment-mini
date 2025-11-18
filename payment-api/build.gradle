@@ -49,6 +49,7 @@ dependencies {
 	testImplementation 'org.testcontainers:kafka'
 	testImplementation 'org.testcontainers:mysql'
     testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.awaitility:awaitility:4.2.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

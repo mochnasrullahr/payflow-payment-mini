@@ -17,18 +17,24 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
+//    @PostMapping("/charge")
+//    public ApiResponse<Payment> charge(@RequestBody PaymentRequest request) {
+//        log.info("Charge request received user={} amount={}", request.getUserId(), request.getAmount());
+//
+//        try {
+//            Payment saved = paymentService.process(request);
+//            return ApiResponse.success("Charge processed", saved);
+//        } catch (IllegalArgumentException ex) {
+//            return ApiResponse.error("INVALID_REQUEST", ex.getMessage());
+//        } catch (Exception ex) {
+//            return ApiResponse.error("PROCESSING_ERROR", ex.getMessage());
+//        }
+//    }
+
     @PostMapping("/charge")
     public ApiResponse<Payment> charge(@RequestBody PaymentRequest request) {
-        log.info("Charge request received user={} amount={}", request.getUserId(), request.getAmount());
-
-        try {
-            Payment saved = paymentService.process(request);
-            return ApiResponse.success("Charge processed", saved);
-        } catch (IllegalArgumentException ex) {
-            return ApiResponse.error("INVALID_REQUEST", ex.getMessage());
-        } catch (Exception ex) {
-            return ApiResponse.error("PROCESSING_ERROR", ex.getMessage());
-        }
+        Payment saved = paymentService.submitPayment(request);
+        return ApiResponse.success("Payment created", saved);
     }
 
 

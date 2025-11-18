@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +22,12 @@ class PaymentServiceTest {
     void setup() {
         PaymentRepository repo = new PaymentRepository();
         PaymentValidationService validation = new PaymentValidationService();
-        paymentService = new PaymentService(repo, validation);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        PaymentProcessorService processor =
+                new PaymentProcessorService(repo, validation, executor);
+
+        paymentService = new PaymentService(repo, processor);
     }
 
     @Test
@@ -35,18 +42,12 @@ class PaymentServiceTest {
     }
 
     @Test
-    void chargeShouldFailWhenAmountInvalid() {
-        PaymentRequest req = new PaymentRequest(
-                "U1",
-                BigDecimal.ZERO,
-                "IDR",
-                "REFX",
-                null
-        );
+    void chargeShouldFailWhenAmountInvalid () throws Exception {
+        PaymentRequest req = new PaymentRequest("U1", BigDecimal.ZERO, "IDR", "REFX", null);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            paymentService.process(req);
-        });
+        Payment p = paymentService.processSync(req);
+
+        assertEquals(PaymentStatus.FAILED, p.getStatus());
     }
 
     @Test
@@ -59,7 +60,7 @@ class PaymentServiceTest {
                 null
         );
 
-        Payment payment = paymentService.process(req);
+        Payment payment = paymentService.processSync(req);
 
         assertEquals(PaymentStatus.SUCCESS, payment.getStatus());
         assertEquals("U1", payment.getUserId());
