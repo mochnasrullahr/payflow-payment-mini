@@ -4,6 +4,7 @@ import com.payflow.paymentapi.dto.ApiResponse;
 import com.payflow.paymentapi.dto.ChargeRequest;
 import com.payflow.paymentapi.entity.Payment;
 import com.payflow.paymentapi.dto.PaymentRequest;
+import com.payflow.paymentapi.logging.LogMasker;
 import com.payflow.paymentapi.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,13 @@ public class PaymentController {
 
     @PostMapping("/charge")
     public ApiResponse<Payment> charge(@RequestBody PaymentRequest request) {
+        log.info("[PAYMENT_REQUEST] user={} amount={} currency={} ref={}",
+                LogMasker.maskUserId(request.getUserId()),
+                request.getAmount(),
+                request.getCurrency(),
+                LogMasker.maskReference(request.getReferenceId())
+        );
+
         Payment saved = paymentService.submitPayment(request);
         return ApiResponse.success("Payment created", saved);
     }
